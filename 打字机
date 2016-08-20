@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style type=text/css>
+    *{margin:0;padding:0;}
+    body{background-color:blanchedalmond;font-size:20px;}
+    .container{width: 600px;background-color:orange;margin:80px auto;padding:20px 0 20px 10px;}
+    h1{text-align:center;}
+    .text-wrap{margin-top:18px;}
+    .text{display:inline-block;height:160px;width:500px;background-color:#fff;vertical-align:top;padding:5px;font-size:20px;line-height:36px;}
+    .user{margin-top:30px;}
+    .user #user-text{width:510px;height:160px;vertical-align:top;padding:5px;resize:none;font-size:20px;line-height:36px;}
+    .time{margin-top:20px;}
+    #currSteep{padding: 5px;color:blue;}
+    #stopSteep{padding: 5px;color:red;}
+    button{width:100px;height:80px;display:inline-block;text-align:center;margin:auto;margin-left:250px;}
+    #endBtn{display:none;}
+</style>
+<body>
+<div class="container">
+    <h1>小明打字机</h1>
+    <div class="text-wrap">
+        示范区:<div class="text">点击【开始测试】，根据本区域内容输入文字</div>
+    </div>
+    <div class="user">
+        输入区:<textarea disabled="disabled" id="user-text"></textarea>
+    </div>
+    <div class="time">
+        <div id="currSteep">当前速度：<span></span>秒/字</div>
+        <div id="stopSteep">整体速度：<span></span>秒/字</div>
+        <div id="tip"></div>
+    </div>
+    <div class="btn">
+        <button id="startBtn">开始</button>
+        <button id="endBtn">结束</button>
+    </div>
+</div>
+<script src="jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        //伪数据库
+        var array=["这里的文字只是测试，我也不知道写些什么了，您可以随意修改,这里的文字只是测试，我也不知道写些什么了，您可以随意修改",
+                "hello my name is xiaoming hello my name is xiaoming hello my name is xiaoming",
+                "left middle center right top bottom button submit area require holder place directive view async start toggle",
+                "inform autocomplete correct default methed error tip success source version gulp static resize change",
+                "有个小孩叫小杜，上街打醋又买布，买了布打了醋，回头看见鹰抓兔，放下布搁下醋，上前去追鹰和兔，飞了鹰跑了兔洒了醋湿了布"
+        ];
+        var currSentence = "";//当前的句子
 
+        var startTime = 0;//开始时间变量
+        var endTime = 0;//结束时间变量
+
+        var $startBtn = $("#startBtn");
+        var $endBtn = $("#endBtn");
+        var $userText = $("#user-text");
+
+        $startBtn.click(function(){//点击开始按钮。注册事件
+            $startBtn.hide();
+            $endBtn.show();
+            $("#stopSteep span").html("");
+            $('#tip').html("");
+            var i = Math.floor(array.length * Math.random());
+            currSentence = array[i];
+            $(".text").html(currSentence);
+            $userText.removeAttr('disabled').val("").focus();
+            startTime = new Date().getTime();//获取当前时间
+        });
+        $endBtn.click(function(){//点击结束按钮，注册事件
+            $endBtn.hide();
+            $startBtn.show();
+            $userText.attr("disabled","true");
+            endTime = new Date().getTime();//获取结束时的时间
+            var sum = ((endTime - startTime)/1000).toFixed(2);//算出开始到结束的时间
+            var inputTxt = $userText.val();//获取用户文本框值
+            var currVal =$(".text").html();
+            console.log(inputTxt);
+            console.log(currVal);
+            if(!inputTxt.length == 0){//判断用户是否已输入
+                if(inputTxt===currVal ){
+                $("#stopSteep span").html((sum/inputTxt.length).toFixed(2));
+                 $('#tip').html("您一共输入"+inputTxt.length+"个字，没有错误");
+                }else{
+                    $("#stopSteep span").html((sum/inputTxt.length).toFixed(2));
+                    $('#tip').html("您一共输入"+inputTxt.length+"个字，但是有错别字");
+
+                }
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
